@@ -1,0 +1,24 @@
+{
+  "name": "attendance",
+  "version": "1.0.0",
+  "description": "attendance system",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "attendence"
+  ],
+  "author": "rick zhang",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.5.0",
+    "koa-better-body": "^3.0.4",
+    "koa-convert": "^1.2.0",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.8.1",
+    "koa-static": "^4.0.2",
+    "mysql": "^2.15.0"
+  }
+}
