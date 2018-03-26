@@ -3,11 +3,13 @@
       <topBar></topBar>
       <div class="main">
         <sideBar></sideBar>
-        <div class="content">
+        <div class="content" :class="isCollapse?'collapse':'normal'">
           <tags />
-          <keep-alive>
-            <router-view></router-view>
-          </keep-alive>
+          <div class="router">
+            <keep-alive>
+              <router-view></router-view>
+            </keep-alive>
+          </div>
         </div>
       </div>
   </div>
@@ -17,10 +19,14 @@
 import topBar from '@/components/topBar'
 import sideBar from '@/components/sideBar'
 import tags from '@/components/tags'
+import {mapState} from 'vuex'
 
 export default {
   components: {
     topBar, sideBar, tags
+  },
+  computed: {
+    ...mapState(['isCollapse'])
   }
 }
 </script>
@@ -34,7 +40,15 @@ export default {
       display: flex;
       height: 100%;
       .content{
-        flex: 1;
+        &.collapse{
+          width: calc(100% - 65px)
+        }
+        &.normal {
+          width: calc(100% - 160px)
+        }
+        .router {
+          padding: 5px 15px;
+        }
       }
     }
   }
