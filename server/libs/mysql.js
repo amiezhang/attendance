@@ -11,7 +11,11 @@ const db = mysql.createPool({
 })
 
 function filter(val) {
-    return val.replace(/"/g,'\\"').replace(/'/g,'\\\'')
+    try {
+        return val.toString().replace(/"/g,'\\"').replace(/'/g,'\\\'')
+    } catch(e){
+        throw new Error(val+'被replace失败')
+    }
 }
 
 db._query = db.query
@@ -20,6 +24,7 @@ db.query = function(sql) {
     return new Promise((resolve, reject) => {
         db._query(sql, (err, data) => {
             if(err){
+                console.log(sql)
                 reject(err)
             } else {
                 resolve(data)
@@ -61,13 +66,13 @@ db.update = function(table, dataObj, where) {
     for(let key in dataObj) {
         arr.push(`${key}='${filter(dataObj[key])}'`)
     }
-    let whereArr = []
+    
+    let whereArr = [],i=0
     for(let key in where) {
-        whereArr.push(`${key}='${filter(dataObj[key])}'`)
+        whereArr.push(`${key}='${filter(where[key])}'`)
     }
-
     return db.query(`
-        UPDATE ${table} SET ${arr.split(',')} WHERE ${whereArr.split(' AND ')}
+        UPDATE ${table} SET ${arr.join(',')} WHERE ${whereArr.join(' AND ')}
     `)
 }
 
@@ -76,8 +81,8 @@ db.delete = function(table, where) {
     assert(typeof where === 'object')
 
     let whereArr = []
-    for(let key in whereArr) {
-        whereArr.push(`${key}='${filter(whereArr[key])}'`)
+    for(let key in where) {
+        whereArr.push(`${key}='${filter(where[key])}'`)
     }
 
     return db.query(`

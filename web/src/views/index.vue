@@ -47,7 +47,15 @@ export default {
           width: calc(100% - 160px)
         }
         .router {
-          padding: 5px 15px;
+          padding: 10px 15px;
+          height: calc(100% - 61px);
+          overflow-y: scroll;
+          &::-webkit-scrollbar {
+            width: 5px;
+          }
+          &::-webkit-scrollbar-thumb{
+            background: #666;
+          }
         }
       }
     }

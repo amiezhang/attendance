@@ -20,9 +20,6 @@
         <el-menu-item index="/lesson">
             <span slot="title">我的课程</span>
         </el-menu-item>
-        <el-menu-item index="/class">
-            <span slot="title">我的班级</span>
-        </el-menu-item>
         <el-menu-item index="/student">
             <span slot="title">我的学生</span>
         </el-menu-item>
@@ -52,7 +49,6 @@ export default {
             let menus = {
                 '/attendance': '课堂考勤',
                 '/lesson': '我的课程',
-                '/class': '我的班级',
                 '/student': '我的学生',
                 '/question': '我的题库',
                 '/user': '用户列表',

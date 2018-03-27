@@ -6,7 +6,6 @@ import Welcome from '@/views/welcome'
 
 const Attendance = resolve => require.ensure([], () => resolve(require('@/views/attendance')),'attendance')
 const Lesson = resolve => require.ensure([], () => resolve(require('@/views/lesson')),'lesson')
-const Class = resolve => require.ensure([], () => resolve(require('@/views/class')),'class')
 const Student = resolve => require.ensure([], () => resolve(require('@/views/student')),'student')
 const Question = resolve => require.ensure([], () => resolve(require('@/views/question')),'question')
 const User = resolve => require.ensure([], () => resolve(require('@/views/user')),'user')
@@ -28,12 +27,8 @@ let router = new Router({
                 component: Lesson
               },
               {
-                path: 'class',
-                component: Class
-              },
-              {
                 path: 'student',
-                component: Student
+                component: Student,
               },
               {
                 path: 'question',

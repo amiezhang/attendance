@@ -17,4 +17,16 @@ button,input,select,textarea{font-size:100%;}
 table{border-collapse:collapse;border-spacing:0;}
 html,body{height:100%}
 
+/**全局样式**/
 #app{height:100%}
+.el-pagination {
+    margin-top: 20px;
+    float: right;
+}
+h1 {
+    font-size: 22px;
+    color: #666;
+}
+.el-tabs__header{
+    margin-bottom: 0!important
+}
