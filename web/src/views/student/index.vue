@@ -1,7 +1,7 @@
 <template>
   <div>
       <classComp v-show="showStatus == 0" :CommonObj="commonSpace"></classComp>
-      <listComp v-show="showStatus == 1" :CommonObj="commonSpace"></listComp>
+      <listComp v-if="showStatus == 1" :CommonObj="commonSpace"></listComp>
   </div>
 </template>
 

@@ -52,6 +52,12 @@ router.get('/list',async ctx => {
     }}
 })
 
+//获取全部课程
+router.post('/list',async ctx => {
+    let list = await ctx.db.select('lesson_table','id,name','1=1')
+    ctx.body = {code: 1, msg: list}
+})
+
 //导入excel接口
 router.post('/import',async ctx => {
     let {lessonName} = ctx.request.fields

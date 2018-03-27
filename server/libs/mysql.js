@@ -43,7 +43,7 @@ db.select = function(table, query = '*', where = '1=1', limit = '') {
     }
     limit = limit ? `LIMIT ${limit}` : ''
     return db.query(`
-        SELECT ${query} FROM ${table} WHERE ${where} ${limit}
+        SELECT ${query} FROM ${table} WHERE ${where} ORDER BY id DESC ${limit}
     `)
 }
 
