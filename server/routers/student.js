@@ -69,4 +69,24 @@ router.get('/list',async ctx => {
     }}
 })
 
+//课程学生总数
+router.get('/listSum',async ctx => {
+    let {id} = ctx.query
+    let sql = `SELECT count(1) FROM students_table WHERE lesson_ids LIKE '%,${id},%' OR lesson_ids like '${id},%' OR lesson_ids like '%,${id}' OR lesson_ids = '${id}'`
+    let total = (await ctx.db.query(sql))[0]['count(1)']
+    ctx.body = {code: 1, msg: {
+        total
+    }}
+})
+
+//课程学生列表
+router.post('/list',async ctx => {
+    let {id,num} = ctx.request.fields
+    let sql = `SELECT id,student_code,name FROM students_table WHERE lesson_ids LIKE '%,${id},%' OR lesson_ids like '${id},%' OR lesson_ids like '%,${id}' OR lesson_ids = '${id}'`
+    let list = await ctx.db.query(sql)
+    ctx.body = {code: 1, msg: {
+        list
+    }}
+})
+
 module.exports = router.routes()
