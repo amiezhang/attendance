@@ -5,26 +5,40 @@
       <h1>{{CommonObj.lessonName}}：第{{CommonObj.series}}次考勤</h1>
       <div class="txt">
           <span>课程共有{{sum}}名学生，抽取</span>
-          <el-input type="number" v-model="num" :max="sum" :min="0" size="small"></el-input>
+          <el-input type="number" v-model="num" :max="sum" :min="1" size="small"></el-input>
           <span>人</span>
           <el-button type="primary" @click="getStudent" size="small">抽查</el-button>
+      </div>
+      <div v-if="students.length > 0">
+        <attendTable :list="students"></attendTable>
+        <el-button class="attend-btn" size="small" type="primary" @click="handleSubmit">确定考勤</el-button>
       </div>
   </div>
 </template>
 
 <script>
+import attendTable from '@/components/attendTable'
+
 export default {
     data(){
         return{
-            num: 5,
+            num: 1,
             sum: 0,
             students: []
         }
     },
     props: ['CommonObj'],
+    components: {attendTable},
     methods:{
         async getStudent(){
-            let data = await this.$http.post('/api/student/list', {
+            if(this.num>this.sum||this.num<0) {
+                this.$message({
+                    type: 'error',
+                    message: `抽取数量只能是1~${this.sum}`
+                });
+                return
+            }
+            let data = await this.$http.post('/api/record/getRandom', {
                 id: this.CommonObj.lessonId,
                 num: this.num
             })
@@ -37,9 +51,39 @@ export default {
                 }
             })
             this.sum = data.total
-        }
+        },
+        handleSubmit() {
+            this.$confirm(`确认要提交本次考勤吗？`)
+                .then(_ => {
+                    this.sumbit()
+                })
+                .catch(_ => {});
+        },
+        async sumbit() {
+            for(let i = 0;i < this.students.length;i++){
+                let stu = this.students[i]
+                if(stu.condition == undefined) {
+                    this.$message({
+                        type: 'error',
+                        message: '请确保每个抽取的同学都选中一种考勤状态！！'
+                    });
+                    return
+                }
+            }
+            console.log(this.students)
+            await this.$http.post('/api/record/submit', {
+                series: this.CommonObj.series,
+                lid: this.CommonObj.lessonId,
+                list: this.students
+            })
+            this.$message({
+                type: 'success',
+                message: '考勤成功！！'
+            });
+            this.CommonObj.changePage(0)
+        },
     },
-    mounted(){
+    mounted(){      
         this.$nextTick(()=>{
             this.getSum()
         })
@@ -65,6 +109,10 @@ export default {
                 padding: 6px 10px;
                 margin-left: 10px;
             }
+        }
+        .attend-btn{
+            float:right;
+            margin-top: 20px;
         }
     }
 </style>

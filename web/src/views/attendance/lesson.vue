@@ -55,7 +55,7 @@ export default {
       this.CommonObj.changePage(1)
     }
   },
-  activated(){
+  mounted(){
     this.$nextTick(() => {
       this.getLesson()
     })
