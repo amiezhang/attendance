@@ -100,6 +100,17 @@ router.post('/update',async ctx => {
     ctx.body = {code:1,msg:'OK'}
 })
 
+//更新学生页考勤
+router.post('/sUpdate',async ctx => {
+    let {sid,list} = ctx.request.fields
+    for(let i=0;i<list.length;i++){
+        let stu = list[i]
+        let sql = `UPDATE record_table SET attend_condition='${stu.attend_condition}',is_quest=${stu.is_quest} WHERE lesson_id='${stu.lesson_id}' AND student_id='${sid}' AND series='${stu.series}'`
+        await ctx.db.query(sql)
+    }
+    ctx.body = {code:1,msg:'OK'}
+})
+
 //获取课程考勤列表
 router.get('/list',async ctx => {
     let {id} = ctx.query
@@ -118,6 +129,21 @@ router.get('/list',async ctx => {
 router.get('/detail',async ctx => {
     let {id,series} = ctx.query
     let sql = `SELECT student_id,name,student_code,attend_condition,is_quest FROM record_table AS a LEFT OUTER JOIN students_table AS b ON a.student_id = b.id WHERE lesson_id=${id} AND series=${series}`
+    let list = await ctx.db.query(sql)
+
+    let F = new Buffer(1).toString()    
+    list = list.map(item => {
+        item.is_quest = item.is_quest.toString() != F
+        return item
+    })
+    
+    ctx.body = {code:1,msg:list}
+})
+
+//获取学生具体第几次考勤情况
+router.get('/sDetail',async ctx => {
+    let {id} = ctx.query
+    let sql = `SELECT attend_condition,is_quest,series,name,a.lesson_id FROM record_table AS a LEFT JOIN lesson_table as b on a.lesson_id=b.id WHERE student_id=${id} ORDER BY lesson_id DESC,series DESC`
     let list = await ctx.db.query(sql)
 
     let F = new Buffer(1).toString()    

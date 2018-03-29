@@ -24,6 +24,7 @@ router.post('/delete',async ctx => {
             id: stu.id
         })
     }
+    await ctx.db.delete('record_table',{lesson_id:id})
     ctx.body = {code: 1,msg: 'OK'}
 })
 

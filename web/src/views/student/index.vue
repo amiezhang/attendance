@@ -16,8 +16,6 @@ export default {
             commonSpace: {
                 classId: '',
                 className: '',
-                studentCode: '',
-                studentName: '',
                 changePage: this.changePage.bind(this)
             }
         }

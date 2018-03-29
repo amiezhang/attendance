@@ -54,10 +54,20 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+
+      <el-dialog :title="studentName" :visible.sync="dialogVisible2">
+        <attendTable :list="list" :lesson='true'></attendTable>
+        <div class="attend-btns">
+            <el-button size="small" type="danger" @click="dialogVisible2 = false">取消</el-button>
+            <el-button size="small" type="primary" @click="handleSubmit">确定修改</el-button>
+        </div>
+      </el-dialog>
   </div>
 </template>
 
 <script>
+import attendTable from '@/components/attendTable'
+
 export default {
   data(){
     return {
@@ -84,9 +94,15 @@ export default {
       inputValue: '',
       options: [],
       dialogVisible: false,
-      isAdd: true
+      isAdd: true,
+      studentName: '',
+      studentId: '',
+      dialogVisible2: false,
+      title: '',
+      list: [],
     }
   },
+  components: {attendTable},
   props: ['CommonObj'],
   methods:{
     async getStudents() {
@@ -100,6 +116,18 @@ export default {
     async getLesson(){
       let data = await this.$http.post('/api/lesson/list')
       this.options = data
+    },
+    handleSubmit() {
+      this.$http.post('api/record/sUpdate',{
+          sid: this.studentId,
+          list: this.list,
+      }).then(res => {
+          this.dialogVisible2 = false
+          this.$message({
+              type: 'success',
+              message: '更新成功'
+          });
+      })
     },
     showAdd() {
       this.isAdd=true;
@@ -137,9 +165,16 @@ export default {
       })
     },
     detail(row){
-      this.CommonObj.studentCode = row.student_code
-      this.CommonObj.studentName = row.name
-      this.CommonObj.changePage(2)
+      this.studentId = row.id
+      this.studentName = row.name
+      this.dialogVisible2 = true
+      this.$http.get('api/record/sDetail',{
+          params:{
+              id: row.id
+          }
+      }).then(res => {
+          this.list = res
+      })
     },
     submitForm() {
       this.$refs['studentForm'].validate((valid) => {
@@ -268,5 +303,12 @@ export default {
       margin-right: 10px;
     }
   }
-
+  .attend-btns{
+      button {
+          float: right;
+          margin-left: 15px;
+      }
+      margin-top: 15px;
+      overflow: hidden;
+  }
 </style>

@@ -33,6 +33,13 @@ router.post('/update',async ctx => {
 router.post('/delete',async ctx => {
     let {id} = ctx.request.fields
     await ctx.db.delete('students_table',{id})
+    //删除点名记录
+    let records = await ctx.db.select('record_table','id,lesson_id',{student_id:id})
+    for(let i=0;i<records.length;i++){
+        let rec = records[i]
+        await ctx.db.delete('record_table',{id:rec.id})
+        await ctx.db.query(`UPDATE lesson_table SET attend_sum = attend_sum-1 WHERE id = ${rec.lesson_id}`)
+    }
     ctx.body = {code:1,msg: 'OK'}
 })
 
@@ -87,6 +94,35 @@ router.post('/list',async ctx => {
     ctx.body = {code: 1, msg: {
         list
     }}
+})
+
+//更新班级
+router.post('/cUpdate',async ctx => {
+    let {id,name} = ctx.request.fields
+    await ctx.db.update('class_table',{name},{id})
+    ctx.body = {code: 1,msg: 'OK'}
+})
+
+//删除班级
+router.post('/cDelete',async ctx => {
+    let {id} = ctx.request.fields
+    let stuIds = (await ctx.db.select('students_table','id',{class_id:id})).map(item => item.id)
+    if(stuIds.length>0) {
+        for(let j=0;j<stuIds.length;j++){
+            let sid = stuIds[j]
+            let records = await ctx.db.select('record_table','id,lesson_id',{student_id:sid})
+            for(let i=0;i<records.length;i++){
+                let rec = records[i]
+                await ctx.db.delete('record_table',{id:rec.id})
+                await ctx.db.query(`UPDATE lesson_table SET attend_sum = attend_sum-1 WHERE id = ${rec.lesson_id}`)
+            }
+        }
+        let sql = `DELETE FROM record_table WHERE ${stuIds.map(item => `student_id="${item}"`).join(' OR ')}`
+        await ctx.db.query(sql)
+    }
+    await ctx.db.delete('class_table',{id})
+    await ctx.db.delete('students_table',{class_id:id})
+    ctx.body = {code: 1,msg: 'OK'}
 })
 
 module.exports = router.routes()
