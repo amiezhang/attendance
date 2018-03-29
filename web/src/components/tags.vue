@@ -24,11 +24,13 @@ export default {
       this.$router.push(tab.name);
     },
     close(key) {
-      if(this.activeName == key) {
+      this.closeTag(key)
+      if(this.activedRouter.length == 0){
+        this.$router.push('/welcome')
+      }else if(this.activeName == key) {
           this.$router.push(this.activedRouter[0].name)
           this.setActive(this.activedRouter[0].name)
       }
-      this.closeTag(key)
     },
     ...mapMutations(['closeTag','setActive','addTag'])
   }

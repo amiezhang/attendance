@@ -24,7 +24,7 @@
             <template slot-scope="scope">
               <el-button
                 size="mini" type="primary"
-                @click="handleEdit(scope.row)">详情</el-button>
+                @click="toDetail(scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -91,6 +91,7 @@ export default {
       }
     }
   },
+  props: ['CommonObj'],
   methods: {
     async getLesson() {
       let data = await this.$http.get('/api/lesson/list', {
@@ -176,7 +177,17 @@ export default {
         this.getLesson()        
         this.dialogVisible2 = false;
       })
+    },
+    toDetail(row) {
+      this.CommonObj.lessonId = row.id
+      this.CommonObj.lessonName = row.name
+      this.CommonObj.changePage(1)
     }
+  },
+  mounted(){
+    this.$nextTick(() => {
+      this.getLesson()
+    })
   },
   activated(){
     this.$nextTick(() => {

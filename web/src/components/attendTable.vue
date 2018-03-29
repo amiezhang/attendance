@@ -8,15 +8,17 @@
                 <th>缺勤</th>
                 <th>迟到</th>
                 <th>早退</th>
+                <th>请假</th>
                 <th>是否回答问题</th>
             </tr>
             <tr v-for="item in list" :key="item.id">
                 <td>{{item.student_code}}</td>
                 <td>{{item.name}}</td>
-                <td><el-radio v-model="item.condition" label="0"></el-radio></td>
-                <td><el-radio v-model="item.condition" label="1"></el-radio></td>
-                <td><el-radio v-model="item.condition" label="2"></el-radio></td>
-                <td><el-radio v-model="item.condition" label="3"></el-radio></td>
+                <td><el-radio v-model="item.attend_condition" :label="0"></el-radio></td>
+                <td><el-radio v-model="item.attend_condition" :label="1"></el-radio></td>
+                <td><el-radio v-model="item.attend_condition" :label="2"></el-radio></td>
+                <td><el-radio v-model="item.attend_condition" :label="3"></el-radio></td>
+                <td><el-radio v-model="item.attend_condition" :label="4"></el-radio></td>
                 <td><el-checkbox v-model="item.is_quest"></el-checkbox></td>
             </tr>
         </table>

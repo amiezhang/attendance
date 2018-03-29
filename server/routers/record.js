@@ -73,11 +73,12 @@ router.post('/getRandom',async ctx => {
     }}
 })
 
+//创建新考勤
 router.post('/submit',async ctx => {
     let {lid,list,series} = ctx.request.fields
     for(let i=0;i<list.length;i++){
         let stu = list[i]
-        let sql = `INSERT INTO record_table (student_id,lesson_id,series,Date,attend_condition,is_quest) VALUES('${stu.id}', '${lid}', '${series}', '${getTime('Y-m-d h:i:s')}', '${stu.condition}', ${stu.is_quest ? true : false})`
+        let sql = `INSERT INTO record_table (student_id,lesson_id,series,Date,attend_condition,is_quest) VALUES('${stu.id}', '${lid}', '${series}', '${getTime('Y-m-d h:i:s')}', '${stu.attend_condition}', ${stu.is_quest ? true : false})`
         await ctx.db.query(sql)
     }
     let sum = (await ctx.db.select('lesson_table','attend_sum',{id: lid}))[0].attend_sum
@@ -86,6 +87,46 @@ router.post('/submit',async ctx => {
         attend_sum: parseInt(sum)+list.length
     },{id: lid})
     ctx.body = {code:1,msg:'OK'}
+})
+
+//更新考勤
+router.post('/update',async ctx => {
+    let {lid,list,series} = ctx.request.fields
+    for(let i=0;i<list.length;i++){
+        let stu = list[i]
+        let sql = `UPDATE record_table SET attend_condition='${stu.attend_condition}',is_quest=${stu.is_quest} WHERE lesson_id='${lid}' AND student_id='${stu.student_id}' AND series='${series}'`
+        await ctx.db.query(sql)
+    }
+    ctx.body = {code:1,msg:'OK'}
+})
+
+//获取课程考勤列表
+router.get('/list',async ctx => {
+    let {id} = ctx.query
+    let data = await ctx.db.select('record_table','Date,series',{lesson_id:id})
+    let seriesCount = parseInt((await ctx.db.select('lesson_table','attend_count',{id}))[0].attend_count)
+    let list = []
+    for(let i=1;i<=seriesCount;i++){
+        let temp = data.filter(item => item.series == i)
+        let obj = {order:`第${i}次考勤`,date:temp[0].Date,count:temp.length,series:temp[0].series}
+        list.push(obj)
+    }
+    ctx.body = {code:1,msg:list}
+})
+
+//获取课程具体第几次考勤情况
+router.get('/detail',async ctx => {
+    let {id,series} = ctx.query
+    let sql = `SELECT student_id,name,student_code,attend_condition,is_quest FROM record_table AS a LEFT OUTER JOIN students_table AS b ON a.student_id = b.id WHERE lesson_id=${id} AND series=${series}`
+    let list = await ctx.db.query(sql)
+
+    let F = new Buffer(1).toString()    
+    list = list.map(item => {
+        item.is_quest = item.is_quest.toString() != F
+        return item
+    })
+    
+    ctx.body = {code:1,msg:list}
 })
 
 module.exports = router.routes()

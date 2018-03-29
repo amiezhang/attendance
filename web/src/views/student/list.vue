@@ -234,6 +234,12 @@ export default {
       this.getLesson()
     })
   },
+  activated() {
+    this.$nextTick(()=>{
+      this.getStudents()
+      this.getLesson()
+    })
+  },
   watch:{
     'CommonObj.className':{
       handler(){

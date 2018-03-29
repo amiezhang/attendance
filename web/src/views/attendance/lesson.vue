@@ -59,7 +59,12 @@ export default {
     this.$nextTick(() => {
       this.getLesson()
     })
-  }
+  },
+  activated(){
+    this.$nextTick(() => {
+       this.getLesson()
+    })
+  },
 }
 </script>
 

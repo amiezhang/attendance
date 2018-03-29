@@ -27,18 +27,6 @@ router.post('/delete',async ctx => {
     ctx.body = {code: 1,msg: 'OK'}
 })
 
-//课程名称
-router.get('/name',async ctx =>{
-    let {id} = ctx.query
-    if(!id) {
-        ctx.body = {code: 0,msg: '"id" is not defined'}
-    }
-    ctx.body = {
-        code: 1,
-        msg: (await ctx.db.select('lesson_table','name',{id}))[0].name
-    }
-})
-
 //课程列表
 router.get('/list',async ctx => {
     let {pageSize,page} = ctx.query

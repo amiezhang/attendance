@@ -62,7 +62,7 @@ export default {
         async sumbit() {
             for(let i = 0;i < this.students.length;i++){
                 let stu = this.students[i]
-                if(stu.condition == undefined) {
+                if(stu.attend_condition == undefined) {
                     this.$message({
                         type: 'error',
                         message: '请确保每个抽取的同学都选中一种考勤状态！！'
@@ -70,7 +70,6 @@ export default {
                     return
                 }
             }
-            console.log(this.students)
             await this.$http.post('/api/record/submit', {
                 series: this.CommonObj.series,
                 lid: this.CommonObj.lessonId,
@@ -84,6 +83,11 @@ export default {
         },
     },
     mounted(){      
+        this.$nextTick(()=>{
+            this.getSum()
+        })
+    },
+    activated() {
         this.$nextTick(()=>{
             this.getSum()
         })

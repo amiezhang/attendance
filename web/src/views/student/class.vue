@@ -64,6 +64,11 @@ export default {
     this.$nextTick(()=>{
       this.getClass()
     })
+  },
+  activated() {
+    this.$nextTick(()=>{
+      this.getClass()
+    })
   }
 }
 </script>
