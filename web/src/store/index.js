@@ -5,24 +5,11 @@ Vue.use(vuex)
 
 export default new vuex.Store({
   state: {
-    isLogin: false,
-    name: '',
-    role: -1,
     isCollapse: false,
     activedRouter: [],
     activeName: ''
   },
   mutations: {
-    setLogin (state, opts) {
-      state.role = opts.role
-      state.name = opts.name
-      state.isLogin = opts.isLogin
-    },
-    resetLogin (state) {
-      state.role = -1
-      state.name = ''
-      state.isLogin = false
-    },
     triggerCollapse(state) {
       state.isCollapse = !state.isCollapse
     },

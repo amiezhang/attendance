@@ -27,7 +27,7 @@
             <span slot="title">我的题库</span>
         </el-menu-item>
       </el-submenu>
-      <el-submenu index="2">
+      <el-submenu index="2" v-if="role==1">
         <template slot="title">
           <i class="fa fa-user"></i>
           <span>用户管理</span>
@@ -59,7 +59,10 @@ export default {
         ...mapMutations(['addTag'])
     },
     computed:{
-        ...mapState(['isCollapse'])
+        ...mapState(['isCollapse']),
+        role() {
+            return localStorage.role
+        }
     }
 }
 </script>

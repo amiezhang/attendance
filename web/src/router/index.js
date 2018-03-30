@@ -54,7 +54,7 @@ let router = new Router({
 // router.beforeEach((to, from, next) => {
 //     let isLogin = router.app.$options.store.state.isLogin
 //     if(!isLogin && to.path != '/login') {
-//         alert('登陆过期，请重新登陆！')
+        
 //         next('/login')
 //     } else if (isLogin && to.matched.length == 0){
 //         next('/welcome')

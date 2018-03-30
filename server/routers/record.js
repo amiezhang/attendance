@@ -3,6 +3,14 @@ const getTime = require('../libs/date')
 
 const router = new koaRouter()
 
+router.use(async (ctx,next) => {
+    if(!ctx.session.username) {
+        ctx.body = {code: -1, msg: '登陆过期'}
+        return
+    }
+    await next()
+})
+
 //抽取学生
 router.post('/getRandom',async ctx => {
     //课程id和本次抽取人数

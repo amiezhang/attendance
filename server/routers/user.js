@@ -4,35 +4,6 @@ const getTime = require('../libs/date')
 
 const router = new koaRouter()
 
-router.get('/reg',async ctx =>{
-    let {username, password} = ctx.query
-    if(password.length < 6 || password.length > 32) {
-        ctx.body = {code: 0, msg: '密码长度要是6~32位'}
-        return
-    }
-    let hash = crypto.createHash('md5')
-    hash.update(password)
-    let data =(await ctx.db.select('user_table','role',{
-        login_name: username
-    }))
-    if(data.length > 0) {
-        ctx.body = {code: 0, msg: '用户名已存在'}
-    } else {
-        await ctx.db.insert('user_table',{
-            login_name: username,
-            password: hash.digest('hex'),
-            role: 0,
-            createTime: getTime('Y-m-d h:i:s')
-        }).then(res => {
-            ctx.body = {code: 1, msg: '注册成功'}
-        }).catch(err => {
-            console.log(err)
-            ctx.body = {code: 0, msg: err}
-        })
-        
-    }
-})
-
 router.post('/login',async ctx =>{
     let {username, password} = ctx.request.fields
     if(!username) {
@@ -63,9 +34,50 @@ router.post('/login',async ctx =>{
     }
 })
 
+router.get('/reg',async ctx =>{
+    let {username, password} = ctx.query
+    if(username.length < 3 || username.length > 32) {
+        ctx.body = {code: 0, msg: '用户名长度要是3~32位'}
+        return
+    }
+    if(password.length < 6 || password.length > 32) {
+        ctx.body = {code: 0, msg: '密码长度要是6~32位'}
+        return
+    }
+    let hash = crypto.createHash('md5')
+    hash.update(password)
+    let data =(await ctx.db.select('user_table','role',{
+        login_name: username
+    }))
+    if(data.length > 0) {
+        ctx.body = {code: 0, msg: '用户名已存在'}
+    } else {
+        await ctx.db.insert('user_table',{
+            login_name: username,
+            password: hash.digest('hex'),
+            role: 0,
+            createTime: getTime('Y-m-d h:i:s')
+        }).then(res => {
+            ctx.body = {code: 1, msg: '注册成功'}
+        }).catch(err => {
+            console.log(err)
+            ctx.body = {code: 0, msg: err}
+        })
+        
+    }
+})
+
 router.get('/logout',async ctx =>{
     ctx.session = null
     ctx.body = {code: 1, msg: 'OK'}
+})
+
+router.use(async (ctx,next) => {
+    if(ctx.session.role != 1) {
+        ctx.body = {code: 0, msg: '您不是管理员，无权访问'}
+        return
+    }
+    await next()
 })
 
 router.get('/list',async ctx =>{

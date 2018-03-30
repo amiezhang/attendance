@@ -3,6 +3,14 @@ const getTime = require('../libs/date')
 
 const router = new koaRouter()
 
+router.use(async (ctx,next) => {
+    if(!ctx.session.username) {
+        ctx.body = {code: -1, msg: '登陆过期'}
+        return
+    }
+    await next()
+})
+
 //添加学生
 router.post('/add',async ctx => {
     let {student_code,name,class_id,lesson_ids} = ctx.request.fields

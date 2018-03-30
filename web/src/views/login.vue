@@ -15,10 +15,27 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="login">登陆</el-button>
+                <el-button type="warning" @click="dialogVisible = true">注册</el-button>
               </el-form-item>
           </el-form>
         </div>
       </div>
+      <el-dialog title="注册" :visible.sync="dialogVisible" :before-close="beforeClose">
+        <el-form :model="regForm" ref="regForm" label-width="100px" :rules="regRule">
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="regForm.username"></el-input>
+          </el-form-item>
+          <el-form-item label="新密码" prop="password">
+            <el-input type="password" v-model="regForm.password"></el-input>
+          </el-form-item>
+          <el-form-item label="确定新密码" prop="confirmPassword">
+            <el-input type="password" v-model="regForm.confirmPassword"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="regUser()">确定</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
 </template>
 
@@ -28,6 +45,7 @@ import {mapState,mapMutations} from 'vuex'
 export default {
   data () {
     return {
+      dialogVisible: false,
       loginForm: {
         username: '',
         password: ''
@@ -39,6 +57,26 @@ export default {
         password: [
             { required: true, message: '请输入密码', trigger: 'blur' }
         ]
+      },
+      regForm: {
+        username: '',
+        password: '',
+        confirmPassword: ''
+      },
+      regRule: {
+         username: [
+           { required: true, message: '请输入用户名', trigger: 'blur' },
+           { min: 3, max: 32, message: '长度在 3 到 32 个字符', trigger: 'blur' }
+         ],
+         password: [
+           { required: true, message: '请输入新密码', trigger: 'blur' },
+           { min: 6, max: 32, message: '长度在 6 到 32 个字符', trigger: 'blur' }
+         ],
+         confirmPassword: [
+           { required: true, message: '请输入再次输入新密码', trigger: 'blur' },
+           { min: 6, max: 32, message: '长度在 6 到 32 个字符', trigger: 'blur' },
+           { validator: this.validatePass, trigger: 'blur' }
+         ]
       }
     }
   },
@@ -50,24 +88,48 @@ export default {
             username: this.loginForm.username,
             password: this.loginForm.password
           }).then(res => {
-            this.setLogin({
-              role: res,
-              name: this.loginForm.username,
-              isLogin: true
-            })
             this.$router.push('/')
+            localStorage.username = this.loginForm.username
+            localStorage.rule = res
           })
         }
       })
     },
     logout () {
       this.$http.get('api/user/logout').then(res => {}, err => {})
-      this.resetLogin()
     },
-    ...mapMutations(['setLogin','resetLogin'])
-  },
-  computed: {
-    ...mapState(['isLogin','name','role'])
+    beforeClose(done) {
+      this.regForm.username = ''
+      this.regForm.password = ''
+      this.regForm.confirmPassword = ''
+      this.$refs['regForm'] && this.$refs['regForm'].resetFields();
+      done()
+    },
+    validatePass(rule, value, callback) {
+        if (this.regForm.password != this.regForm.confirmPassword) {
+          callback(new Error('两次输入密码不一致'));
+        } else {
+          callback();
+        }
+    },
+    regUser() {
+      this.$refs['regForm'].validate((valid) => {
+        if (valid) {
+          this.$http.get('api/user/reg',{
+           params:{
+              username: this.regForm.username,
+              password: this.regForm.password
+           }
+          }).then(res => {
+            this.$message({
+                type: 'success',
+                message: '注册成功'
+            });
+            this.dialogVisible = false
+          })
+        }
+      })
+    }
   },
   mounted () {
     this.logout()
@@ -130,7 +192,7 @@ export default {
 </style>
 
 <style>
-  .el-form-item.is-required .el-form-item__label:before{
+  .right .el-form-item.is-required .el-form-item__label:before{
     display: none;
   }
 </style>

@@ -5,7 +5,7 @@
         <span class="fa fa-bars" @click="triggerCollapse"></span>
       </div>
       <div class="right">
-        你好，{{$store.state.name}}&nbsp;&nbsp;
+        你好，{{name}}&nbsp;&nbsp;
         <router-link to="/reset">修改密码</router-link>
         <router-link to="/login">退出登陆</router-link>
       </div>
@@ -17,7 +17,10 @@ import {mapState,mapMutations} from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['isCollapse'])
+    ...mapState(['isCollapse']),
+    name() {
+      return localStorage.username
+    }
   },
   methods:{
     ...mapMutations(['triggerCollapse'])

@@ -4,6 +4,14 @@ const getTime = require('../libs/date')
 
 const router = new koaRouter()
 
+router.use(async (ctx,next) => {
+    if(!ctx.session.username) {
+        ctx.body = {code: -1, msg: '登陆过期'}
+        return
+    }
+    await next()
+})
+
 //获取问题
 router.get('/list',async ctx => {
     let {id,pageSize,page} = ctx.query
