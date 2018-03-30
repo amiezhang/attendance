@@ -25,6 +25,9 @@ export default new vuex.Store({
     },
     setActive(state, key) {
       state.activeName = key
+    },
+    clearTag(state) {
+      state.activedRouter = []
     }
   }
 })

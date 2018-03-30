@@ -88,9 +88,10 @@ export default {
             username: this.loginForm.username,
             password: this.loginForm.password
           }).then(res => {
-            this.$router.push('/')
+            this.$router.push('/welcome')
             localStorage.username = this.loginForm.username
-            localStorage.rule = res
+            localStorage.role = res
+            this.clearTag()
           })
         }
       })
@@ -129,7 +130,8 @@ export default {
           })
         }
       })
-    }
+    },
+    ...mapMutations(['clearTag'])
   },
   mounted () {
     this.logout()

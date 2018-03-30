@@ -4,6 +4,14 @@ const getTime = require('../libs/date')
 
 const router = new koaRouter()
 
+router.get('/isLogin',async ctx => {
+    if(!ctx.session.username) {
+        ctx.body = {code: -1, msg: '登陆过期'}
+        return
+    }
+    ctx.body = {code: 1, msg: 'OK'}
+})
+
 router.post('/login',async ctx =>{
     let {username, password} = ctx.request.fields
     if(!username) {

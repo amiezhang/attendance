@@ -51,16 +51,4 @@ let router = new Router({
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//     let isLogin = router.app.$options.store.state.isLogin
-//     if(!isLogin && to.path != '/login') {
-        
-//         next('/login')
-//     } else if (isLogin && to.matched.length == 0){
-//         next('/welcome')
-//     } else {
-//         next()
-//     }
-// })
-
 export default router

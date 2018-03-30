@@ -6,7 +6,9 @@
 
 <script>
 export default {
-  
+  beforeCreate () {
+    this.$http.get('api/user/isLogin')
+  }
 }
 </script>
 

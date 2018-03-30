@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="wrap" v-if="isLogin">
       <topBar></topBar>
       <div class="main">
         <sideBar></sideBar>
@@ -22,11 +22,21 @@ import tags from '@/components/tags'
 import {mapState} from 'vuex'
 
 export default {
+  data() {
+    return {
+      isLogin: false
+    }
+  },
   components: {
     topBar, sideBar, tags
   },
   computed: {
     ...mapState(['isCollapse'])
+  },
+  beforeCreate () {
+    this.$http.get('api/user/isLogin').then(res=>{
+      this.isLogin = true
+    })
   }
 }
 </script>
