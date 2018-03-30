@@ -31,7 +31,7 @@
         </el-table>
       </div>
 
-      <el-dialog title="添加学生" :visible.sync="dialogVisible" :before-close="beforeClose">
+      <el-dialog :title="title2" :visible.sync="dialogVisible" :before-close="beforeClose">
         <el-form :model="studentForm" :rules="rules" ref="studentForm" label-width="100px">
           <el-form-item label="姓名：" prop="name">
             <el-input v-model="studentForm.name"></el-input>
@@ -99,6 +99,7 @@ export default {
       studentId: '',
       dialogVisible2: false,
       title: '',
+      title2: '',
       list: [],
     }
   },
@@ -135,6 +136,7 @@ export default {
       this.studentForm.id = ''
       this.studentForm.name = ''
       this.studentForm.student_code = ''
+      this.title2 = '添加学生'
     },
     handleDelete(row) {
       this.$confirm(`确认要删除这个学生吗？`)
@@ -158,6 +160,7 @@ export default {
       this.studentForm.id = row.id
       this.studentForm.name = row.name
       this.studentForm.student_code = row.student_code
+      this.title2 = '修改学生资料'
       this.options.forEach(item=>{
         row.lesson_ids.split(',').forEach(id=>{
           if(id==item.id) this.dynamicTags.push(item)

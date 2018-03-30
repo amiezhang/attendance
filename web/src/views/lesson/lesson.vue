@@ -31,7 +31,7 @@
       </div>
       
       <el-pagination @current-change="getLesson" @size-change="handleSizeChange"
-        :current-page.sync="cur" :page-sizes="[15, 50, 100]" background
+        :current-page.sync="cur" :page-sizes="[10, 50, 100]" background
         :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
 
       <el-dialog title="导入新课程" :visible.sync="dialogVisible" width="403px" :before-close="beforeClose">
@@ -40,7 +40,7 @@
                   :on-success="clearUpload" :data="{lessonName: lName}" action="api/lesson/import">
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip">只能上传xls文件，且不超过1Mb</div>
+          <div class="el-upload__tip" slot="tip">只能上传xls或aspx文件，且不超过1Mb</div>
         </el-upload>
         <el-button size="mini" type="primary" @click="upload" style="display:block;margin:10px auto;">上传并导入</el-button>
       </el-dialog>
@@ -77,7 +77,7 @@ export default {
       excelFile: [],
       lName: '',
       cur: 1,
-      pageSize: 15,
+      pageSize: 10,
       total: 0,
       dialogVisible: false,
       dialogVisible2: false,
@@ -152,11 +152,11 @@ export default {
         this.$message.error('上传失败,服务器后台错误')
         return
       }
-      const isXls = (file.name).endsWith('.xls');
+      const isXls = (file.name).endsWith('.xls') || (file.name).endsWith('.apsx');
       const isLt1M = file.size / 1024 / 1024 < 1;
 
       if (!isXls) {
-        this.$message.error('只能上传xls文件!');
+        this.$message.error('只能上传正方系统导出的xls或者aspx文件!');
         this.$refs['uploadDiv'].clearFiles()
       } else if (!isLt1M) {
         this.$message.error('上传的文件大小不能超过1M');

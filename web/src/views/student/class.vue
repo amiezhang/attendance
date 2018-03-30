@@ -29,7 +29,7 @@
       </div>
       
       <el-pagination @current-change="getClass" @size-change="handleSizeChange"
-        :current-page.sync="cur" :page-sizes="[15, 50, 100]" background
+        :current-page.sync="cur" :page-sizes="[10, 50, 100]" background
         :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
       
       <el-dialog title="编辑课程" :visible.sync="dialogVisible">
@@ -55,7 +55,7 @@ export default {
   data() {
     return {
       cur: 1,
-      pageSize: 15,
+      pageSize: 10,
       total: 0,
       classes: [],
       dialogVisible: false,
