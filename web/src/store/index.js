@@ -7,19 +7,19 @@ export default new vuex.Store({
   state: {
     isLogin: false,
     name: '',
-    roles: [],
+    role: -1,
     isCollapse: false,
     activedRouter: [],
     activeName: ''
   },
   mutations: {
     setLogin (state, opts) {
-      state.roles = opts.roles
+      state.role = opts.role
       state.name = opts.name
       state.isLogin = opts.isLogin
     },
     resetLogin (state) {
-      state.roles = []
+      state.role = -1
       state.name = ''
       state.isLogin = false
     },

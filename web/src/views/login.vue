@@ -51,7 +51,7 @@ export default {
             password: this.loginForm.password
           }).then(res => {
             this.setLogin({
-              roles: res,
+              role: res,
               name: this.loginForm.username,
               isLogin: true
             })
@@ -67,7 +67,7 @@ export default {
     ...mapMutations(['setLogin','resetLogin'])
   },
   computed: {
-    ...mapState(['isLogin','name','roles'])
+    ...mapState(['isLogin','name','role'])
   },
   mounted () {
     this.logout()
