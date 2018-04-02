@@ -12,12 +12,27 @@ router.use(async (ctx,next) => {
     await next()
 })
 
+//获取分数配置
+router.get('/scoreConf',async ctx => {
+    let {id} = ctx.query
+    let data = await ctx.db.select('lesson_table','attend_score',{id})
+    ctx.body = {code: 1,msg: data[0].attend_score}
+})
+
+//设置分数配置
+router.post('/scoreConf',async ctx => {
+    let {id,attend_score} = ctx.request.fields
+    await ctx.db.update('lesson_table',{attend_score},{id})
+    ctx.body = {code: 1,msg: 'OK'}
+})
+
 //更新课程信息
 router.post('/update',async ctx => {
     let {id,name,teach_time,area} = ctx.request.fields
     await ctx.db.update('lesson_table',{name,teach_time,area},{id})
     ctx.body = {code: 1,msg: 'OK'}
 })
+
 //删除课程
 router.post('/delete',async ctx => {
     let {id} = ctx.request.fields
@@ -75,7 +90,8 @@ router.post('/import',async ctx => {
         teach_time:data.teach_time,
         area:data.area,
         createTime,
-        userId: ctx.session.userId
+        userId: ctx.session.userId,
+        attend_score: '1,0,0,0,1'
     })).insertId
     //处理每个学生
     for(let i=0;i<data.students.length;i++) {

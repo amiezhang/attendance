@@ -24,11 +24,12 @@ router.post('/login',async ctx =>{
     }
     let hash = crypto.createHash('md5')
     hash.update(password)
-    let data = await ctx.db.select('user_table','role,id',{
-        login_name: username,
-        password: hash.digest('hex')
+    let data = await ctx.db.select('user_table','role,id,password',{
+        login_name: username
     })
     if(data.length == 0) {
+        ctx.body = {code: 0, msg: '该用户不存在'}
+    } else if(data[0].password != hash.digest('hex')) {
         ctx.body = {code: 0, msg: '用户名或密码错误'}
     } else {
         if(!ctx.session.username){
@@ -85,7 +86,27 @@ router.use(async (ctx,next) => {
     if(!ctx.session.username) {
         ctx.body = {code: -1, msg: '登陆过期'}
         return
-    }else if(ctx.session.role != 1) {
+    }
+    await next()
+})
+
+//修改自己的密码
+router.post('/minePass',async ctx =>{
+    let {password} = ctx.request.fields
+    if(password.length < 6 || password.length > 32) {
+        ctx.body = {code: 0, msg: '密码长度要是6~32位'}
+        return
+    }
+    let hash = crypto.createHash('md5')
+    hash.update(password)
+    await ctx.db.update('user_table',{
+        password: hash.digest('hex')
+    },{id:ctx.session.userId})
+    ctx.body = {code: 1, msg: 'OK'}    
+})
+
+router.use(async (ctx,next) => {
+    if(ctx.session.role != 1) {
         ctx.body = {code: 0, msg: '您不是管理员，无权访问'}
         return
     }
@@ -113,7 +134,7 @@ router.post('/updateRole',async ctx =>{
     ctx.body = {code: 1, msg: 'OK'}    
 })
 
-//修改密码
+//修改用户密码
 router.post('/updatePass',async ctx =>{
     let {id,password} = ctx.request.fields
     if(password.length < 6 || password.length > 32) {

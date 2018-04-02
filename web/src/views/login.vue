@@ -25,10 +25,10 @@
           <el-form-item label="用户名" prop="username">
             <el-input v-model="regForm.username"></el-input>
           </el-form-item>
-          <el-form-item label="新密码" prop="password">
+          <el-form-item label="密码" prop="password">
             <el-input type="password" v-model="regForm.password"></el-input>
           </el-form-item>
-          <el-form-item label="确定新密码" prop="confirmPassword">
+          <el-form-item label="确定密码" prop="confirmPassword">
             <el-input type="password" v-model="regForm.confirmPassword"></el-input>
           </el-form-item>
           <el-form-item>
@@ -69,7 +69,7 @@ export default {
            { min: 3, max: 32, message: '长度在 3 到 32 个字符', trigger: 'blur' }
          ],
          password: [
-           { required: true, message: '请输入新密码', trigger: 'blur' },
+           { required: true, message: '请输入密码', trigger: 'blur' },
            { min: 6, max: 32, message: '长度在 6 到 32 个字符', trigger: 'blur' }
          ],
          confirmPassword: [
@@ -92,6 +92,9 @@ export default {
             localStorage.username = this.loginForm.username
             localStorage.role = res
             this.clearTag()
+          }).catch(err=>{
+            this.loginForm.username = ''
+            this.loginForm.password = ''
           })
         }
       })
