@@ -33,6 +33,7 @@ router.post('/delete',async ctx => {
         })
     }
     await ctx.db.delete('record_table',{lesson_id:id})
+    await ctx.db.delete('quest_table',{lesson_id:id})
     ctx.body = {code: 1,msg: 'OK'}
 })
 
@@ -41,8 +42,8 @@ router.get('/list',async ctx => {
     let {pageSize,page} = ctx.query
     pageSize = pageSize || 15;
     page = page - 1 || 0
-    let total =  (await ctx.db.select('lesson_table','count(1)'))[0]['count(1)']
-    let list = await ctx.db.select('lesson_table','*','1=1',`${page*pageSize},${pageSize}`)
+    let total =  (await ctx.db.select('lesson_table','count(1)',{userId: ctx.session.userId}))[0]['count(1)']
+    let list = await ctx.db.select('lesson_table','*',{userId: ctx.session.userId},`${page*pageSize},${pageSize}`)
     ctx.body = {code: 1, msg: {
         total,
         list
@@ -51,7 +52,7 @@ router.get('/list',async ctx => {
 
 //获取全部课程
 router.post('/list',async ctx => {
-    let list = await ctx.db.select('lesson_table','id,name','1=1')
+    let list = await ctx.db.select('lesson_table','id,name',{userId: ctx.session.userId})
     ctx.body = {code: 1, msg: list}
 })
 
@@ -60,38 +61,44 @@ router.post('/import',async ctx => {
     let {lessonName} = ctx.request.fields
     let data = await excel(ctx.request.fields.file[0].path)
     let row = await ctx.db.select('lesson_table','id',{
-        lesson_code: data.lesson_code
+        lesson_code: data.lesson_code,
+        userId: ctx.session.userId
     })
-    let createTime = getTime('Y-m-d h:i:s')
     if(row.length > 0){
         ctx.body = {code: 0,msg: '该课程已存在'}
         return
     }
+    let createTime = getTime('Y-m-d h:i:s')
     let lessonId = (await ctx.db.insert('lesson_table',{
         name:lessonName,
         lesson_code:data.lesson_code,
         teach_time:data.teach_time,
         area:data.area,
-        createTime
+        createTime,
+        userId: ctx.session.userId
     })).insertId
     //处理每个学生
     for(let i=0;i<data.students.length;i++) {
         let stu = data.students[i]
         row = await ctx.db.select('class_table','id',{
-            name: stu[2]
+            name: stu[2],
+            userId: ctx.session.userId
         })
         if(row.length == 0){
             ctx.db.insert('class_table',{
                 name: stu[2],
-                createTime
+                createTime,
+                userId: ctx.session.userId
             })
         }
         row = await ctx.db.select('students_table','id,lesson_ids',{
-            student_code: stu[0]
+            student_code: stu[0],
+            userId: ctx.session.userId
         })
         if(row.length == 0){
             let class_id = (await ctx.db.select('class_table','id',{
-                name: stu[2]
+                name: stu[2],
+                userId: ctx.session.userId
             }))[0].id
             let lesson_ids = ''
             if(row.lesson_ids) {
@@ -104,12 +111,13 @@ router.post('/import',async ctx => {
                 name: stu[1],
                 class_id,
                 lesson_ids,
-                createTime
+                createTime,
+                userId: ctx.session.userId
             })
         } else {
             await ctx.db.update('students_table',{
                 lesson_ids: row[0].lesson_ids ? row[0].lesson_ids+','+lessonId:lessonId ,
-            },{id:row[0].id})
+            },{id:row[0].id,userId: ctx.session.userId})
         }
     }
     ctx.body = {code: 1}

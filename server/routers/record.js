@@ -86,7 +86,7 @@ router.post('/submit',async ctx => {
     let {lid,list,series} = ctx.request.fields
     for(let i=0;i<list.length;i++){
         let stu = list[i]
-        let sql = `INSERT INTO record_table (student_id,lesson_id,series,Date,attend_condition,is_quest) VALUES('${stu.id}', '${lid}', '${series}', '${getTime('Y-m-d h:i:s')}', '${stu.attend_condition}', ${stu.is_quest ? true : false})`
+        let sql = `INSERT INTO record_table (student_id,lesson_id,series,Date,attend_condition,is_quest,userId) VALUES('${stu.id}', '${lid}', '${series}', '${getTime('Y-m-d h:i:s')}', '${stu.attend_condition}', ${stu.is_quest ? true : false}, ${ctx.session.userId})`
         await ctx.db.query(sql)
     }
     let sum = (await ctx.db.select('lesson_table','attend_sum',{id: lid}))[0].attend_sum

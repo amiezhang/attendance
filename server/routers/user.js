@@ -24,7 +24,7 @@ router.post('/login',async ctx =>{
     }
     let hash = crypto.createHash('md5')
     hash.update(password)
-    let data = await ctx.db.select('user_table','role',{
+    let data = await ctx.db.select('user_table','role,id',{
         login_name: username,
         password: hash.digest('hex')
     })
@@ -34,6 +34,7 @@ router.post('/login',async ctx =>{
         if(!ctx.session.username){
             ctx.session.username = username
             ctx.session.role = data[0].role
+            ctx.session.userId = data[0].id
         }
         ctx.body = {
             code: 1, 
@@ -81,7 +82,10 @@ router.get('/logout',async ctx =>{
 })
 
 router.use(async (ctx,next) => {
-    if(ctx.session.role != 1) {
+    if(!ctx.session.username) {
+        ctx.body = {code: -1, msg: '登陆过期'}
+        return
+    }else if(ctx.session.role != 1) {
         ctx.body = {code: 0, msg: '您不是管理员，无权访问'}
         return
     }
