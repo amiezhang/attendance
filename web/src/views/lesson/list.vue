@@ -1,7 +1,9 @@
 <template>
   <div>
       <el-button size="mini" type="primary" @click="CommonObj.changePage(0)">返回</el-button>
-      <el-button class="right-lbtn" size="mini" type="success" @click="dialogVisible2 = true">配置考勤分数</el-button>
+      <el-button class="right-lbtn" size="mini" type="success" @click="exportExcel">导出考勤表</el-button>
+      <el-button class="right-lbtn" size="mini" type="warning" @click="dialogVisible2 = true">配置考勤分数</el-button>
+      
       <hr>
       <h1>{{CommonObj.lessonName}}</h1>
       <el-table :data="list">
@@ -169,6 +171,9 @@ export default {
                 }
             })
             
+        },
+        exportExcel(){
+            location.href = `api/export/attendance?id=${this.CommonObj.lessonId}`
         }
     },
     mounted() {

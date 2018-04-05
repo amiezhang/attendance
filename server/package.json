@@ -19,6 +19,7 @@
     "koa-router": "^7.4.0",
     "koa-session": "^5.8.1",
     "koa-static": "^4.0.2",
-    "mysql": "^2.15.0"
+    "mysql": "^2.15.0",
+    "xlsx": "^0.12.7"
   }
 }

@@ -7,5 +7,6 @@ router.use('/lesson', require('./lesson'))
 router.use('/student', require('./student'))
 router.use('/record', require('./record'))
 router.use('/quest', require('./quest'))
+router.use('/export', require('./export'))
 
 module.exports = router.routes()
