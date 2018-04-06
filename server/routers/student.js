@@ -23,7 +23,8 @@ router.post('/add',async ctx => {
     }
     await ctx.db.insert('students_table',{
         student_code,name,class_id,lesson_ids,
-        createTime: getTime('Y-m-d h:i:s')
+        createTime: getTime('Y-m-d h:i:s'),
+        userId: ctx.session.userId
     })
     ctx.body = {code:1,msg: 'OK'}
 })

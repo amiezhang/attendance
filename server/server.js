@@ -30,11 +30,11 @@ server.use(convert(body({
     fields: true
 })))
 
-//静态文件
-server.use(static('./wwwRoot'))
-
 //api
 let rootRouter = new koaRouter()
 rootRouter.use('/api', require('./routers'))
 server.use(rootRouter.routes())
+
+//静态文件
+server.use(static('./wwwRoot'))
 
