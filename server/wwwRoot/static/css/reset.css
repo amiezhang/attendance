@@ -1,0 +1,32 @@
+body,h1,h2,h3,h4,h5,h6,p,blockquote,dl,dt,dd,ul,ol,li,pre,
+form,fieldset,legend,button,input,textarea,th,td  {margin:0;padding:0;}
+hr {margin: 10px 0;}
+body,button,input,select,textarea{font:12px/1.5     tahoma,arial,\5b8b\4f53;}
+h1,h2,h3,h4,h5,h6{font-size:250%;}
+address,cite,dfn,em,var{font-style:normal;}
+code,kbd,pre,samp{font-family:courier new,courier,monospace;}
+small{font-size:12px;}
+ul,ol{list-style:none;}
+a{text-decoration:none;}
+a:hover{text-decoration:underline;}
+sup{vertical-align:text-top;}
+sub{vertical-align:text-bottom;}
+legend{color:#000;}
+fieldset,img{border:0;}
+button,input,select,textarea{font-size:100%;}
+table{border-collapse:collapse;border-spacing:0;}
+html,body{height:100%}
+
+/**全局样式**/
+#app{height:100%}
+.el-pagination {
+    margin-top: 20px;
+    float: right;
+}
+h1 {
+    font-size: 22px;
+    color: #666;
+}
+.el-tabs__header{
+    margin-bottom: 0!important
+}
