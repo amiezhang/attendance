@@ -3,7 +3,6 @@ const koaRouter = require('koa-router')
 const static = require('koa-static')
 const body = require('koa-better-body');
 const convert = require('koa-convert');
-const url = require('url')
 const config = require('./config')
 const db = require('./libs/mysql')
 const session = require('koa-session')

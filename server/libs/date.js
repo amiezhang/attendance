@@ -1,6 +1,8 @@
+//数字格式化，不足2位前面加0
 function fix2number(n) {  
     return [0,n].join('').slice(-2);  
-}  
+}
+//当前时间格式话 例如getTime('Y-m-d H:i:s')返回2018-04-01
 function getTime(format) {  
     var curDate = new Date();  
     if (format == undefined) return curDate;  
@@ -13,5 +15,5 @@ function getTime(format) {
     format = format.replace(/ms/i, curDate.getMilliseconds());  
     return format;  
 }  
-
+//导出getTime函数
 module.exports = getTime

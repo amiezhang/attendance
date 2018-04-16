@@ -1,7 +1,8 @@
+//引入mysql模块
 const mysql = require('mysql')
 const assert = require('assert')
 const config = require('../config')
-
+//创建mysql连接池
 const db = mysql.createPool({
     host: config.DB_HOST,
     user: config.DB_USER,
@@ -9,7 +10,7 @@ const db = mysql.createPool({
     database: config.DB_DATABASE,
     port: config.DB_PORT
 })
-
+//过滤引号
 function filter(val) {
     try {
         return val.toString().replace(/"/g,'\\"').replace(/'/g,'\\\'')
@@ -19,7 +20,7 @@ function filter(val) {
 }
 
 db._query = db.query
-
+//重写query为promise形式
 db.query = function(sql) {
     return new Promise((resolve, reject) => {
         db._query(sql, (err, data) => {
@@ -32,7 +33,7 @@ db.query = function(sql) {
         })
     })
 }
-
+//添加自己写的select方法
 db.select = function(table, query = '*', where = '1=1', limit = '') {
     if (typeof where === 'object') {
         let arr = []
@@ -46,7 +47,7 @@ db.select = function(table, query = '*', where = '1=1', limit = '') {
         SELECT ${query} FROM ${table} WHERE ${where} ORDER BY id DESC ${limit}
     `)
 }
-
+//添加自己写的insert方法
 db.insert = function(table, dataObj){
     let keys = [], values =[]
     for(let key in dataObj){
@@ -57,7 +58,7 @@ db.insert = function(table, dataObj){
         INSERT INTO ${table} (${keys.join(',')}) VALUES('${values.join("', '")}')
     `)
 }
-
+//添加自己写的update方法
 db.update = function(table, dataObj, where) {
     assert(where)
     assert(typeof where === 'object')
@@ -75,7 +76,7 @@ db.update = function(table, dataObj, where) {
         UPDATE ${table} SET ${arr.join(',')} WHERE ${whereArr.join(' AND ')}
     `)
 }
-
+//添加自己写的delete方法
 db.delete = function(table, where) {
     assert(where)
     assert(typeof where === 'object')

@@ -1,5 +1,4 @@
 const koaRouter = require('koa-router')
-const excel = require('../libs/excel')
 const getTime = require('../libs/date')
 
 const router = new koaRouter()

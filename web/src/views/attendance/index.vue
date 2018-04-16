@@ -1,6 +1,8 @@
 <template>
   <div>
+      <!-- 考勤操作页 -->
       <lessonComp v-if="showStatus == 0" :CommonObj="commonSpace"></lessonComp>
+      <!-- 课程列表页 -->
       <listComp v-if="showStatus == 1" :CommonObj="commonSpace"></listComp>
   </div>
 </template>

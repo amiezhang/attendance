@@ -1,10 +1,15 @@
+// 配置文件
+//（由于安全关系以下配置信息都是和实际有出入）
 module.exports = {
-    PORT: 8088,
+    //监听本地端口
+    PORT: 80,
+    //数据库服务器名称、端口、登陆名字、密码、数据库名字
     DB_HOST: 'localhost',
     DB_PORT: 3306,
     DB_USER: 'root',
     DB_PASSWORD: '',
     DB_DATABASE: 'attendance',
+    //koa-session插件相关配置
     SESSION: {
         key: 'rick666', /* (string) cookie key (default is koa:sess) */
         maxAge: 1200000, /* (number || 'session') maxAge in ms (default is 1 days) */

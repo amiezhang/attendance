@@ -7,6 +7,7 @@
           <tags />
           <div class="router">
             <keep-alive>
+                <!--前端路由-->
                 <router-view></router-view>
             </keep-alive>
           </div>

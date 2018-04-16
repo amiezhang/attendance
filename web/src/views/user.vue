@@ -41,7 +41,7 @@
         </el-form>
       </el-dialog>
 
-      <el-dialog title="编辑课程" :visible.sync="dialogVisible2">
+      <el-dialog title="编辑用户" :visible.sync="dialogVisible2">
         <el-form :model="userDetail" ref="userDetail" label-width="100px">
           <el-form-item label="用户名" prop="loginName">
             <el-input disabled v-model="userDetail.loginName"></el-input>

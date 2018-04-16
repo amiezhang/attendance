@@ -3,7 +3,7 @@ const output = require('../libs/output')
 const fs = require('fs')
 
 const r1 = new koaRouter()
-
+//分析并导出某个课程的考勤统计报表
 r1.get('/attendance',async ctx => {
     // let {id} = ctx.request.fields
     let {id} = ctx.query
