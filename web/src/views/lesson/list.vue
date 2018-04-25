@@ -202,7 +202,7 @@ export default {
         float: right;
     }
     .score-input{
-        width:80px;
+        width:80px!important;
         input{
             text-align: center
         }

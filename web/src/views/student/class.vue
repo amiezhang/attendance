@@ -32,7 +32,7 @@
         :current-page.sync="cur" :page-sizes="[10, 50, 100]" background
         :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
       
-      <el-dialog title="编辑课程" :visible.sync="dialogVisible">
+      <el-dialog title="编辑班级" :visible.sync="dialogVisible">
         <el-form :model="classDetail" ref="classDetail" label-width="100px">
           <el-form-item label="id">
             <el-input :disabled="true" v-model="classDetail.id"></el-input>
